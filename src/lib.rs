@@ -29,6 +29,8 @@ pub use datafusion::sql as datafusion_sql;
 #[cfg(feature = "substrait")]
 pub use datafusion_substrait;
 
+mod memoriam;
+
 #[allow(clippy::borrow_deref_ref)]
 pub mod catalog;
 pub mod common;
@@ -50,6 +52,7 @@ pub mod physical_plan;
 mod pyarrow_filter_expression;
 mod record_batch;
 pub mod sql;
+#[cfg(feature = "object-store")]
 pub mod store;
 
 #[cfg(feature = "substrait")]
@@ -107,9 +110,12 @@ fn _internal(py: Python, m: Bound<'_, PyModule>) -> PyResult<()> {
     functions::init_module(&funcs)?;
     m.add_submodule(&funcs)?;
 
-    let store = PyModule::new_bound(py, "object_store")?;
-    store::init_module(&store)?;
-    m.add_submodule(&store)?;
+    #[cfg(feature = "object-store")]
+    {
+        let store = PyModule::new_bound(py, "object_store")?;
+        store::init_module(&store)?;
+        m.add_submodule(&store)?;
+    }
 
     // Register substrait as a submodule
     #[cfg(feature = "substrait")]

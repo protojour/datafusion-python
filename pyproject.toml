@@ -64,7 +64,7 @@ include = [
 exclude = [".github/**", "ci/**", ".asf.yaml"]
 # Require Cargo.lock is up to date
 locked = true
-features = ["substrait"]
+features = []
 
 # Enable docstring linting using the google style guide
 [tool.ruff.lint]

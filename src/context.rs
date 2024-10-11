@@ -39,6 +39,7 @@ use crate::expr::sort_expr::PySortExpr;
 use crate::physical_plan::PyExecutionPlan;
 use crate::record_batch::PyRecordBatchStream;
 use crate::sql::logical::PyLogicalPlan;
+#[cfg(feature = "object-store")]
 use crate::store::StorageContexts;
 use crate::udaf::PyAggregateUDF;
 use crate::udf::PyScalarUDF;
@@ -299,6 +300,30 @@ impl PySessionContext {
     }
 
     /// Register an object store with the given name
+    #[pyo3(signature = (url, username=None, password=None, service_name=None, service_secret=None))]
+    pub fn register_memoriam_ontology(
+        &mut self,
+        url: &str,
+        username: Option<&str>,
+        password: Option<&str>,
+        service_name: Option<&str>,
+        service_secret: Option<&str>,
+        py: Python,
+    ) -> PyResult<()> {
+        wait_for_future(
+            py,
+            self.register_memoriam_ontology_internal(
+                url,
+                username,
+                password,
+                service_name,
+                service_secret,
+            ),
+        )
+    }
+
+    /// Register an object store with the given name
+    #[cfg(feature = "object-store")]
     #[pyo3(signature = (scheme, store, host=None))]
     pub fn register_object_store(
         &mut self,
@@ -423,6 +448,7 @@ impl PySessionContext {
                     + Uuid::new_v4()
                         .simple()
                         .encode_lower(&mut Uuid::encode_buffer())
+                        .as_ref()
             }
         };
 

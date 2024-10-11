@@ -55,7 +55,7 @@ from .expr import (
 
 from .plan import LogicalPlan, ExecutionPlan
 
-from . import functions, object_store, substrait
+from . import functions, object_store
 
 __version__ = importlib_metadata.version(__name__)
 
@@ -88,7 +88,6 @@ __all__ = [
     "expr",
     "functions",
     "object_store",
-    "substrait",
 ]
 
 

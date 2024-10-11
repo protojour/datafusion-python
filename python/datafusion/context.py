@@ -642,6 +642,16 @@ class SessionContext:
         """
         return DataFrame(self.ctx.from_polars(data, name))
 
+    def register_memoriam_ontology(
+        self,
+        url: str,
+        username: str | None = None,
+        password: str | None = None,
+        service_name: str | None = None,
+        service_secret: str | None = None
+    ) -> None:
+        self.ctx.register_memoriam_ontology(url, username, password, service_name, service_secret)
+
     def register_table(self, name: str, table: Table) -> None:
         """Register a :py:class: `~datafusion.catalog.Table` as a table.
 
